@@ -1,2 +1,2 @@
 # NLPModel
-Algonomy iInternship
+Algonomy Internship
