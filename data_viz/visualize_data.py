@@ -50,6 +50,9 @@ def main():
     # Graphing the data as histograms to visualize
 
     spec_value_count_sorted = dict(sorted(spec_value_count.items(), key=operator.itemgetter(1),reverse=True))
+    # writing data of the dictionary to a csv to stop parsing the csv again if we need to modify data in dictionary
+    pandas.DataFrame.from_dict(data= spec_value_count_sorted, orient = 'index').to_csv('spec_value_count_sorted.csv',header = False)
+
     plt.bar(spec_value_count_sorted.values(), spec_value_count_sorted.keys(), color ='g')
     plt.title("Count vs Values")
     plt.xlabel("Count")
@@ -58,6 +61,9 @@ def main():
     plt.show()
 
     spec_attribute_count_sorted = dict(sorted(spec_attribute_count.items(), key=operator.itemgetter(1),reverse=True))
+    # writing data of the dictionary to a csv to stop parsing the csv again if we need to modify data in dictionary
+    pandas.DataFrame.from_dict(data= spec_attribute_count_sorted, orient = 'index').to_csv('spec_attribute_count_sorted.csv',header = False)
+
     plt.bar(spec_attribute_count_sorted.values(), spec_attribute_count_sorted.keys(), color ='g')
     plt.title("Counts vs Attributes")
     plt.xlabel("Count")
