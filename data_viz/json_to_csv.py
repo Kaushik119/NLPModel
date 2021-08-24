@@ -16,11 +16,15 @@ def main():
     for file_to_open in json_list:
         filename = os.fsdecode(file_to_open) # open file
         print(filename) # to check progress in terminal
-        json_opened = pandas.read_json(r'/Users/sreeram/Projects/Algonomy/train/'+filename) # loading the json with the file name in the current iteration
-        json_opened.to_csv('/Users/sreeram/Projects/Algonomy/csv_files/dataset_csv_'+str(file_index), mode = 'a', header = False) # converting the loaded json into a csv using pandas built in library
+        
+        json_opened = pandas.read_json(abs_path+filename) # loading the json with the file name in the current iteration
+        
+        store_location = "/Users/sreeram/Projects/Algonomy/csv_files/dataset_csv_" # path to the location where the csv will be made
+        json_opened.to_csv(store_location+str(file_index), mode = 'a', header = False) # converting the loaded json into a csv using pandas built in library
+        
         counter+=1 # incrementing counter to see which file is being parsed
         
-        if counter % 25 == 0: # changing the file_index of the csv for every 100 jsons
+        if counter % 25 == 0: # changing the file_index of the csv for every 25 jsons
             file_index+=1
 
 if __name__ == "__main__":
