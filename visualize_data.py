@@ -6,8 +6,9 @@ import ast
 from collections import defaultdict
 import operator
 
+
 def main():
-    abs_path = "E:\\csv"  # Absolute path to pass to the directory encoder
+    abs_path = "/Users/sreeram/Projects/Algonomy/csv_files"  # Absolute path to pass to the directory encoder
     directory = os.fsencode(abs_path)  # Absolute path to pass to the directory encoder
     csv_list = os.listdir(directory)  # creating list of file names
     csv_list.sort() # sort list by numerical order
@@ -24,11 +25,12 @@ def main():
         if counter == 0: # skips the first iteration of each csv file in order to not skip the NAND
             counter+=1
             continue
-        csv_name = os.fsdecode(csv_to_open) # Decoding directory of files to get a list of file names
-        spec_read_file = pandas.read_csv(r'E:\\csv\\'+csv_name, usecols= [5]) # Reading the csv files and extracting the spec column
+        
+        csv_name = os.fsdecode(csv_to_open) #Decoding directory of files to get a list of file nams 
+        spec_read_file = pandas.read_csv(abs_path+"/"+csv_name, usecols= [5]) # Reading the csv files and extracting the spec column
         
         # Loop to generate a dictionary with counts of attributes and their values
-        for rows in spec_read_file.itertuples(): # iterate over the row in each csv file
+        for rows in spec_read_file.itertuples(): # iterate over the tuples of specs in each row in each csv file
             dict_data = ast.literal_eval(rows._1) # convert each row into a dictionary
             
             for attribute in dict_data.keys():
@@ -47,32 +49,28 @@ def main():
         print("CSV Done : ",counter)
         counter+=1
 
-    # Graphing the data as histograms to visualize
 
-    spec_value_count_sorted = dict(sorted(spec_value_count.items(), key=operator.itemgetter(1),reverse=True))
-    # writing data of the dictionary to a csv to stop parsing the csv again if we need to modify data in dictionary
+    # Graphing the data as histograms to visualize
+    spec_value_count_sorted = dict(sorted(spec_value_count.items(), key=operator.itemgetter(1),reverse=True))  
+
+    ind = numpy.arange(len(spec_value_count_sorted))
+    plt.bar(ind, list(spec_value_count_sorted.values()))
+    plt.xticks(ind, list(spec_value_count_sorted.keys()))
+    plt.title("Values vs Counts")
+    plt.ylabel("Count")
+    plt.show()
+    
+    spec_attribute_count_sorted = dict(sorted(spec_attribute_count.items(), key=operator.itemgetter(1),reverse=True))
+
+    pandas.DataFrame.from_dict(data= spec_attribute_count_sorted, orient = 'index').to_csv('spec_attribute_count_sorted.csv',header = False)
     pandas.DataFrame.from_dict(data= spec_value_count_sorted, orient = 'index').to_csv('spec_value_count_sorted.csv',header = False)
 
-    plt.bar(spec_value_count_sorted.values(), spec_value_count_sorted.keys(), color ='g')
-    plt.title("Count vs Values")
-    plt.xlabel("Count")
-    plt.yticks([])
-    plt.xlim(0, 17500)
+    plt.bar(spec_attribute_count_sorted.keys(), spec_attribute_count_sorted.values(), color ='g')
+    plt.title("Atrributes vs Counts")
+    plt.ylabel("Count")
     plt.show()
 
-    spec_attribute_count_sorted = dict(sorted(spec_attribute_count.items(), key=operator.itemgetter(1),reverse=True))
-    # writing data of the dictionary to a csv to stop parsing the csv again if we need to modify data in dictionary
-    pandas.DataFrame.from_dict(data= spec_attribute_count_sorted, orient = 'index').to_csv('spec_attribute_count_sorted.csv',header = False)
-
-    plt.bar(spec_attribute_count_sorted.values(), spec_attribute_count_sorted.keys(), color ='g')
-    plt.title("Counts vs Attributes")
-    plt.xlabel("Count")
-    plt.yticks([])
-    plt.xlim(0, 80000)
-    plt.show()
 
 
 if __name__ == "__main__":
     main()
-
-
